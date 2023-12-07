@@ -46,7 +46,16 @@ def read_all_posts(id:int ):
     return{"data":post}
 
 
+#write code for deleting particular post using the route /posts/{id} and the delete method
 
+@app.delete("/posts/{id}")
+def delete_post(id:int):
+    post=read_one_id(id)
+    if post==None:
+        return Response(status_code=404)
+    else:
+        posts.remove(post)
+        return {"message":"post deleted successfully"}
 
 
 
