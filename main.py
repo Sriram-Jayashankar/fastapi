@@ -71,3 +71,17 @@ def update_post(id:int,post:post):
         posts.append(post_dict)
         return {"message":"post updated successfully"}
 
+#write code for updating particular post using the route /posts/{id} and the patch method
+
+@app.patch("/posts/{id}")
+def update_post(id:int,post:post):
+    post_dict=post.dict()
+    post_dict["id"]=id
+    post=read_one_id(id)
+    if post==None:
+        return Response(status_code=404)
+    else:
+        posts.remove(post)
+        posts.append(post_dict)
+        return {"message":"post updated successfully"}
+
