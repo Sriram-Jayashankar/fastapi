@@ -20,6 +20,12 @@ class post(BaseModel):
     id: int
     rating: Optional[int] = None #making it optional and making default value as None
 
+class credentials(BaseModel):
+    email:str
+    password:str
+    phoneno: int
+    name:Optional[str]
+
 app=FastAPI()
 
 @app.get("/")
@@ -85,3 +91,15 @@ def update_post(id:int,post:post):
         posts.append(post_dict)
         return {"message":"post updated successfully"}
 
+
+@app.post("/testpost")
+async def testfun(hello:credentials):
+    return {"data":hello}
+
+@app.post("/testpost")
+async def testfun(request: Request):
+    try:
+        json= await request.json()
+        return {"data":json}
+    except(e):
+        return{"erdggdgror":e}
