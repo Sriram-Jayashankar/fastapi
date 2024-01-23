@@ -92,9 +92,9 @@ def update_post(id:int,post:post):
         return {"message":"post updated successfully"}
 
 
-@app.post("/testpost")
-async def testfun(hello:credentials):
-    return {"data":hello}
+# @app.post("/testpost")
+# async def testfun(hello:credentials):
+#     return {"data":hello}
 
 @app.post("/testpost")
 async def testfun(request: Request):
