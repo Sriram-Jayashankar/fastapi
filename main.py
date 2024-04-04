@@ -20,6 +20,7 @@ class post(BaseModel):
     id: int
     rating: Optional[int] = None #making it optional and making default value as None
 
+
 class credentials(BaseModel):
     email:str
     password:str
@@ -35,7 +36,9 @@ async def root():
 #create a post
 @app.post("/posts")
 def create_posts(post: post):
+    print(type(post))
     post_dict = post.dict()
+    print(type(post_dict))
     post_dict["id"]=len(posts)+1#creates a unique id for each post
     posts.append(post_dict)
     return {"data":post_dict}
@@ -78,7 +81,7 @@ def update_post(id:int,post:post):
         return {"message":"post updated successfully"}
 
 #write code for updating particular post using the route /posts/{id} and the patch method
-
+'''
 @app.patch("/posts/{id}")
 def update_post(id:int,post:post):
     post_dict=post.dict()
@@ -90,8 +93,7 @@ def update_post(id:int,post:post):
         posts.remove(post)
         posts.append(post_dict)
         return {"message":"post updated successfully"}
-
-
+'''
 # @app.post("/testpost")
 # async def testfun(hello:credentials):
 #     return {"data":hello}
