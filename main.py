@@ -2,9 +2,30 @@ from fastapi import FastAPI,Response,Request
 from pydantic import BaseModel
 from typing import Optional
 from fastapi.params import Body
+import psycopg2
+import time
+posts=[{"title":"Blog 1", "content":"Content of Blog 1","id":1},{"title":"Blog 2", "content":"Content of Blog 2","id":2}]#created a list of dictionaries to temporarily act as a database
 
-posts=[{"title":"Blog 1", "content":"Content of Blog 1","id":1}, {"title":"Blog 2", "content":"Content of Blog 2","id":2}]#created a list of dictionaries to temporarily act as a database
 
+
+
+
+# connecting to postgres database
+
+
+# to ensure that it connects and if thres any issue put that onto the screen we use a while loop and a time.sleep function
+while(True):
+    try:
+        conn=psycopg2.connect("dbname=fastapiDatabase user=postgres password=builafisory")
+        break
+    except Exception as e:
+        print(f"error while connecting\n{e}")
+    time.sleep(5)
+
+cursor=conn.cursor()
+cursor.execute("""select * from posts""")
+records=cursor.fetchall()
+print(records)
 #function to read an id of the post
 def read_one_id(idvar):
     for i in posts:
@@ -17,7 +38,7 @@ class post(BaseModel):
     title: str
     content: str
     published: bool=True #default value is True
-    id: int
+    # id: int
     rating: Optional[int] = None #making it optional and making default value as None
 
 
@@ -32,16 +53,29 @@ app=FastAPI()
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
-    
 #create a post
 @app.post("/posts")
 def create_posts(post: post):
     print(type(post))
     post_dict = post.dict()
     print(type(post_dict))
-    post_dict["id"]=len(posts)+1#creates a unique id for each post
-    posts.append(post_dict)
-    return {"data":post_dict}
+    
+
+    cursor.execute("""select max(id) from posts""")
+    value=cursor.fetchall()
+    print(type(value[0][0]),value[0])
+    post_dict["id"]=value[0][0]+1
+    cursor.execute("""insert into posts values(%s,%s,%s,%s,%s)""",(post_dict["id"],post_dict["title"],post_dict["content"],post_dict["published"],post_dict["rating"]))
+    # print(cursor.fetchone()[0])
+    conn.commit()
+
+    cursor.execute(""" select * from posts where id=%s""",(post_dict["id"],))
+    temp=cursor.fetchone()
+    print(type(temp),temp)
+
+    #post_dict["id"]=len(posts)+1#creates a unique id for each post
+    #posts.append(post_dict)
+    return {"data":temp}
 
 #read all posts
 @app.get("/posts")
