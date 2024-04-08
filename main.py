@@ -33,8 +33,9 @@ def read_one_id(idvar):
             return i
     return None
 
-
+#if i make something optional i need to give it a default value because there is no id in the body of the request it ,and i add it later 
 class post(BaseModel):
+    id :Optional[str]=-1
     title: str
     content: str
     published: bool=True #default value is True
@@ -50,22 +51,32 @@ class credentials(BaseModel):
 
 app=FastAPI()
 
+def convertListDict(list):
+    keys=["id","title","content","published","rating"]
+    final=[]
+    for i in list:
+        #print(dict(zip(keys,i)))
+        final.append(dict(zip(keys,i)))
+    return final
+
 @app.get("/")
 async def root():
     return {"message": "Hello World"}
 #create a post
 @app.post("/posts")
-def create_posts(post: post):
-    print(type(post))
+def   create_posts(post: post):
+    # print(type(post))
     post_dict = post.dict()
-    print(type(post_dict))
+    # print(type(post_dict))
     
 
     cursor.execute("""select max(id) from posts""")
     value=cursor.fetchall()
     print(type(value[0][0]),value[0])
     post_dict["id"]=value[0][0]+1
-    cursor.execute("""insert into posts values(%s,%s,%s,%s,%s)""",(post_dict["id"],post_dict["title"],post_dict["content"],post_dict["published"],post_dict["rating"]))
+    post_tuple= tuple(post_dict.values())
+    print(post_tuple)
+    cursor.execute("""insert into posts values(%s,%s,%s,%s,%s)""",post_tuple)
     # print(cursor.fetchone()[0])
     conn.commit()
 
@@ -80,39 +91,40 @@ def create_posts(post: post):
 #read all posts
 @app.get("/posts")
 def get_all_posts():
-    return {"data":posts}
+    cursor.execute("""select * from posts""")
+    post=cursor.fetchall()
+    final=convertListDict(post)
+    return {"data":final}
 
-#read a single post
+#read a single postjsjsj
 @app.get("/posts/{id}")
 def read_all_posts(id:int ):
-    post=read_one_id(id)
-    return{"data":post}
+    cursor.execute("""select * from posts where id=%s""",(id,))
+    post=cursor.fetchall()
+    print(type(post))
+    return{"data":convertListDict(post)}
 
 
 #write code for deleting particular post using the route /posts/{id} and the delete method
 
 @app.delete("/posts/{id}")
 def delete_post(id:int):
-    post=read_one_id(id)
-    if post==None:
-        return Response(status_code=404)
-    else:
-        posts.remove(post)
-        return {"message":"post deleted successfully"}
+    cursor.execute("""delete from posts where id=%s""",(id,))
+    conn.commit()
+    return {"message":"post deleted successfully"}
 
 #write code for updating particular post using the route /posts/{id} and the put method
 
 @app.put("/posts/{id}")
 def update_post(id:int,post:post):
     post_dict=post.dict()
+    post_tuple=tuple(post.values())
+    cursor.execute("""update posts set %s where id=%s""",(id,))
+    conn.commit()
     post_dict["id"]=id
     post=read_one_id(id)
-    if post==None:
-        return Response(status_code=404)
-    else:
-        posts.remove(post)
-        posts.append(post_dict)
-        return {"message":"post updated successfully"}
+
+    return {"message":"post updated successfully"}
 
 #write code for updating particular post using the route /posts/{id} and the patch method
 '''
