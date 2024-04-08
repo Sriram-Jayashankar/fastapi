@@ -118,8 +118,10 @@ def delete_post(id:int):
 @app.put("/posts/{id}")
 def update_post(id:int,post:post):
     post_dict=post.dict()
-    post_tuple=tuple(post.values())
-    cursor.execute("""update posts set %s where id=%s""",(id,))
+    post_dict["id"]=id
+    post_tuple=tuple(post_dict.values())
+    #print(type(post))
+    cursor.execute("""update posts set %s where id=%s""",(post_tuple,id))
     conn.commit()
     post_dict["id"]=id
     post=read_one_id(id)
