@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Optional
 
-class post(BaseModel):
+class Post(BaseModel):
     id :Optional[str]=-1
     title: str
     content: str
@@ -10,8 +10,8 @@ class post(BaseModel):
     rating: Optional[int] = None #making it optional and making default value as None
 
 
-class credentials(BaseModel):
+class User(BaseModel):
+    id:Optional[int]
     email:str
     password:str
-    phoneno: int
-    name:Optional[str]
+    name:str

@@ -4,11 +4,11 @@ from typing import Optional
 from fastapi.params import Body
 import psycopg2
 import time
-from ..utils import schemas
+from ..utils.schemas import Post
 
-post=schemas.post()
+post=Post
 
-router=APIRouter( prefix="/posts",tags="POSTS",)
+router=APIRouter(tags=["POSTS"])
 
 
 
@@ -20,9 +20,9 @@ def convertListDict(list):
         final.append(dict(zip(keys,i)))
     return final
 
-@router.get("/")
-async def root():
-    return {"message": "Hello World"}
+# @router.get("/")
+# async def root():
+#     return {"message": "Hello World"}
 #create a post
 @router.post("/posts")
 def   create_posts(post: post):

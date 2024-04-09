@@ -33,12 +33,10 @@ def connecttodb():
 
 #if i make something optional i need to give it a default value because there is no id in the body of the request it ,and i add it later 
 
-def main():
-    connecttodb()
-    app=FastAPI()
-#     return {"data":hello}
-    app.include_router(posts.APIRouter)
-    app.include_router(user.APIRouter)
 
-def __init__():
-    main()
+connecttodb()
+#     return {"data":hello}
+app=FastAPI()
+app.include_router(posts.router)
+    # app.include_router(user.APIRouter)
+
