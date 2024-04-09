@@ -3,7 +3,7 @@ from ..utils.schemas import User
 
 userclass=User
 
-router=APIRouter
+router=APIRouter()
 
 @router.post("/user")
 def create_user(user:userclass):
