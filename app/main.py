@@ -4,7 +4,7 @@ from typing import Optional
 from fastapi.params import Body
 import psycopg2
 import time
-from . import posts,user
+from .routes import posts,user
 # posts=[{"title":"Blog 1", "content":"Content of Blog 1","id":1},{"title":"Blog 2", "content":"Content of Blog 2","id":2}]#created a list of dictionaries to temporarily act as a database
 
 
