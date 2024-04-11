@@ -11,7 +11,7 @@ class Post(BaseModel):
 
 
 class User(BaseModel):
-    id:Optional[int]
+    id:Optional[int]=-1
     email:str
     password:str
     name:str

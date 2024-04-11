@@ -5,7 +5,7 @@ from fastapi.params import Body
 import psycopg2
 import time
 from ..utils.schemas import Post
-
+# from ..main import conn,cursor
 post=Post
 
 router=APIRouter(tags=["POSTS"])

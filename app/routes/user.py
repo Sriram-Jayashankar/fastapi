@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from ..utils.schemas import User
+# from ..main import conn,cursor
 
 userclass=User
 

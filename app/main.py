@@ -16,16 +16,8 @@ from .routes import posts,user
 
 # to ensure that it connects and if thres any issue put that onto the screen we use a while loop and a time.sleep function
 
-def connecttodb():
-    while(True):
-        try:
-            conn=psycopg2.connect("dbname=fastapiDatabase user=postgres password=builafisory")
-            break
-        except Exception as e:
-            print(f"error while connecting\n{e}")
-        time.sleep(5)
 
-# cursor=conn.cursor()
+    
 # cursor.execute("""select * from posts""")
 # records=cursor.fetchall()
 # print(records)
@@ -34,8 +26,7 @@ def connecttodb():
 #if i make something optional i need to give it a default value because there is no id in the body of the request it ,and i add it later 
 
 
-connecttodb()
-#     return {"data":hello}
+conn,cursor=connecttodb()
 app=FastAPI()
 app.include_router(posts.router)
 app.include_router(user.router)
