@@ -5,12 +5,15 @@ from fastapi.params import Body
 import psycopg2
 import time
 from ..utils.schemas import Post
+from ..utils.databse import connecttodb
+
+
 # from ..main import conn,cursor
 post=Post
 
 router=APIRouter(tags=["POSTS"])
 
-
+conn,cursor=connecttodb()
 
 def convertListDict(list):
     keys=["id","title","content","published","rating"]

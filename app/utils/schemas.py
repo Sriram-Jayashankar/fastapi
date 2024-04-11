@@ -15,3 +15,4 @@ class User(BaseModel):
     email:str
     password:str
     name:str
+    user_id:str
